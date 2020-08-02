@@ -14,7 +14,7 @@ end %properties
 methods
   function [obj] = transfer()
     obj.value = -999;
-    obj.fromAcc = 'NONE'
+    obj.fromAcc = 'NONE';
     obj.fromAccId = -999;
     obj.toAcc = 'NONE';
     obj.toAccId = -999;
@@ -28,7 +28,7 @@ methods
     obj = obj.setFromAcc(fromAcc);
     obj = obj.setFromAccId(fromAccId);
     obj = obj.setToAcc(toAcc);
-    obj = obj.setToAccId(toAccid);
+    obj = obj.setToAccId(toAccId);
     obj = obj.setDate(date);
     obj = obj.setNote(note);
     obj = obj.setId(id);

@@ -30,17 +30,17 @@ methods
   end
   
   function [obj] = edit(obj,isExpense,value,merchant,name,type,subtype,date,assAcc,assAccId,note,id)
-    obj = obj.setIsExpense = isExpense;
-    obj = obj.setValue     = value;
-    obj = obj.setMerchant  = merchant
-    obj = obj.setName      = name;
-    obj = obj.setType      = type;
-    obj = obj.setSubtype   = subtype;
-    obj = obj.setDate      = date;
-    obj = obj.setAssAcc    = assAcc;
-    obj = obj.setAssAccId  = assAccId;
-    obj = obj.setNote      = note;
-    obj = obj.setId        = id;
+    obj = obj.setIsExpense(isExpense);
+    obj = obj.setValue(value);
+    obj = obj.setMerchant(merchant);
+    obj = obj.setName(name);
+    obj = obj.setType(type);
+    obj = obj.setSubtype(subtype);
+    obj = obj.setDate(date);
+    obj = obj.setAssAcc(assAcc);
+    obj = obj.setAssAccId(assAccId);
+    obj = obj.setNote(note);
+    obj = obj.setId(id);
   end
 end %methods 
 
