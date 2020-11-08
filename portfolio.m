@@ -12,10 +12,10 @@ end %properties
 
 methods
   function [obj] = portfolio()
-    obj.transactionList = transaction;
-    obj.accountList = account;
-    obj.accountHistList.history = account;
-    obj.transferList = transfer;
+    obj.transactionList = [];
+    obj.accountList = [];
+    obj.accountHistList.history = [];
+    obj.transferList = [];
     obj.nTransaction = 0;
     obj.nTransfer = 0;
     obj.nAccount = 0;
