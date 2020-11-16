@@ -13,15 +13,16 @@ end %properties
 methods
   function [obj] = portfolio()
     obj.transactionList = [];
-    obj.accountList = [];
+    obj.accountList = account();
     obj.accountHistList.history = [];
-    obj.transferList = [];
+    obj.transferList = transfer();
+    obj.transactionList = transaction();
     obj.nTransaction = 0;
     obj.nTransfer = 0;
     obj.nAccount = 0;
   end
   
-  function [obj] = addTransaction(obj,isExpense,value,merchant,name,type,subtype,assAcc,note)
+  function [obj] = addTransaction(obj,isExpense,isReal,value,merchant,name,type,assAcc,note)
     date = datevec(now);
     assAccId = find([strcmpi(assAcc,{obj.accountList(:).name})]);
     if isempty(assAccId)
@@ -29,7 +30,7 @@ methods
     end
     transactionID = obj.nTransaction + 1;
     TA = transaction();
-    TA = TA.edit(isExpense,value,merchant,name,type,subtype,date,assAcc,assAccId,note,transactionID);
+    TA = TA.edit(isExpense,isReal,value,merchant,name,type,date,assAcc,assAccId,note,transactionID);
     obj.transactionList(transactionID) = TA;
     obj = obj.executeTransaction(TA,value);
     obj.nTransaction = obj.nTransaction + 1;
@@ -68,12 +69,25 @@ methods (Access = private)
   function [obj] = executeTransaction(obj,TA,valueDelta)
     AC = obj.accountList(TA.assAccId);
     if TA.isExpense
-      newRealValue = AC.realValue - valueDelta;
+        if TA.isReal
+            newRealValue = AC.realValue - valueDelta;
+            newUnrealValue = AC.unrealValue;
+        else
+            newUnrealValue = AC.unrealValue - valueDelta;
+            newRealValue = AC.realValue;
+        end
     else
-      newRealValue = AC.realValue + valueDelta;
+        if TA.isReal
+            newRealValue = AC.realValue + valueDelta;
+            newUnrealValue = AC.unrealValue;
+        else
+            newUnrealValue = AC.unrealValue + valueDelta;
+            newRealValue = AC.realValue;
+        end
     end
-    AC = AC.edit(AC.institution,AC.id,AC.unrealValue,newRealValue,AC.date,AC.name,AC.type);
+    AC = AC.edit(AC.institution,AC.id,newUnrealValue,newRealValue,TA.date,AC.name,AC.type);
     obj.accountList(TA.assAccId) = AC;
+    obj.accountHistList(TA.assAccId).history(end+1) = AC;
   end
 
   function [obj] = executeTransfer(obj,TR,valueDelta)
@@ -81,10 +95,12 @@ methods (Access = private)
     fromAC = obj.accountList(TR.fromAccId);
     newToAccRealValue = toAC.realValue + valueDelta;
     newFromAccRealValue = fromAC.realValue - valueDelta;
-    toAC = toAC.edit(toAC.institution,toAC.id,toAC.unrealValue,newToAccRealValue,toAC.date,toAC.name,toAC.type);
-    fromAC = fromAC.edit(fromAC.institution,fromAC.id,fromAC.unrealValue,newFromAccRealValue,fromAC.date,fromAC.name,fromAC.type);
+    toAC = toAC.edit(toAC.institution,toAC.id,toAC.unrealValue,newToAccRealValue,TR.date,toAC.name,toAC.type);
+    fromAC = fromAC.edit(fromAC.institution,fromAC.id,fromAC.unrealValue,newFromAccRealValue,TR.date,fromAC.name,fromAC.type);
     obj.accountList(TR.toAccId) = toAC;
     obj.accountList(TR.fromAccId) = fromAC;
+    obj.accountHistList(TR.toAccId).history(end+1) = toAC;
+    obj.accountHistList(TR.fromAccId).history(end+1) = fromAC;
   end
 end %methods (Access = private)
 

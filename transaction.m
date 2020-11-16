@@ -2,11 +2,11 @@ classdef transaction
 
 properties
   isExpense
+  isReal
   value
   merchant
   name
   type
-  subtype
   date
   assAcc
   assAccId
@@ -21,7 +21,6 @@ methods
     obj.merchant  = 'NONE';
     obj.name      = 'NONE';
     obj.type      = 'NONE';
-    obj.subtype   = 'NONE';
     obj.date      = -999;
     obj.assAcc    = 'NONE';
     obj.assAccId  = -999;
@@ -29,13 +28,13 @@ methods
     obj.id        = -999;
   end
   
-  function [obj] = edit(obj,isExpense,value,merchant,name,type,subtype,date,assAcc,assAccId,note,id)
+  function [obj] = edit(obj,isExpense,isReal,value,merchant,name,type,date,assAcc,assAccId,note,id)
     obj = obj.setIsExpense(isExpense);
+    obj = obj.setIsReal(isReal);
     obj = obj.setValue(value);
     obj = obj.setMerchant(merchant);
     obj = obj.setName(name);
     obj = obj.setType(type);
-    obj = obj.setSubtype(subtype);
     obj = obj.setDate(date);
     obj = obj.setAssAcc(assAcc);
     obj = obj.setAssAccId(assAccId);
@@ -47,6 +46,10 @@ end %methods
 methods (Access = private)
   function [obj] = setIsExpense(obj,isExpense)
     obj.isExpense = isExpense;
+  end
+  
+  function [obj] = setIsReal(obj,isReal)
+    obj.isReal = isReal;
   end
   
   function [obj] = setValue(obj,value)
@@ -63,10 +66,6 @@ methods (Access = private)
 
   function [obj] = setType(obj,type)
     obj.type = type;
-  end
-  
-  function [obj] = setSubtype(obj,subtype)
-    obj.subtype = subtype;
   end
   
   function [obj] = setDate(obj,date)
